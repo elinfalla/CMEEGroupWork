@@ -1,8 +1,9 @@
 #!usr/bin/env python3
 
-"""Script that runs a discrete-time version of the Lotka-Volterra model"""
+"""Script that runs a discrete-time version of the Lotka-Volterra model, with Gaussian fluctuations
+    of both the resource and consumer populations"""
 
-__appname__ = "LV3.py"
+__appname__ = "LV5.py"
 __author__ = 'Elin Falla (ef16@ic.ac.uk)'
 __version__ = '0.0.1'
 
@@ -13,19 +14,21 @@ import matplotlib.pylab as p
 
 
 def run_LV(R=10, C=3, r=1., a=0.1, z=1.5, e=0.75, K=100, generations=30):
-    """Runs discrete-time Lotka-Volterra model 'generations' times"""
+    """Runs discrete-time Lotka-Volterra model 'generations' times with Gaussian fluctuations
+    of both the resource and consumer populations"""
 
     # initialise pops array with initial R and C
-    pops = np.array([(R, C)])
+    pops = np.array([(R, C)]) # ,float removed
     # square brackets around tuple specifies 2D array (ie. matrix) [[ ]] does the same
 
     for i in range(generations):
 
         R = pops[i, 0]
         C = pops[i, 1]
+        epsilon = np.random.normal(loc=0, scale=0.1)  # loc = mean, scale = SD
 
-        nextR = R * (1 + r * (1 - (R / K)) - a * C)
-        nextC = C * (1 - z + (e * a * R))
+        nextR = R * (1 + (r + epsilon) * (1 - (R / K)) - a * C)
+        nextC = C * (1 - (z + epsilon) + (e * a * R))
 
         # if a population dies, keep the respective pop at 0 (so doesn't go negative)
         if nextR < 0:
@@ -69,7 +72,7 @@ def main(argv):
     p.plot(timeframe, pops[:, 0], 'g-', label="Resource density")
     p.plot(timeframe, pops[:, 1], 'b-', label="Consumer density")
     p.grid()
-    p.legend(loc="best")
+    p.legend(loc="upper right")
     p.xlabel("Time")
     p.ylabel("Population density")
     p.title("Consumer-Resource population dynamics")
@@ -88,10 +91,10 @@ def main(argv):
            bbox=dict(facecolor="salmon", alpha=0.5, boxstyle="round")
            )
 
-    #p.show()
+    p.show()
 
     # save figure as a pdf
-    f1.savefig("../Results/LV3_timeseries.pdf")
+    f1.savefig("../Results/LV5_timeseries.pdf")
 
     # plot Consumer density against resource density
     f2, ax = p.subplots()  # default number of subplots is 1
@@ -115,8 +118,8 @@ def main(argv):
            transform=ax.transAxes,
            bbox=dict(facecolor="salmon", alpha=0.5, boxstyle="round")
            )
-    #p.show()
-    f2.savefig("../Results/LV3_pop_comparison.pdf")
+    p.show()
+    f2.savefig("../Results/LV5_pop_comparison.pdf")
 
     return 0
 
