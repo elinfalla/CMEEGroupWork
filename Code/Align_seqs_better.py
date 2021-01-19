@@ -147,19 +147,25 @@ def main(argv):
     # Run find_best_align to find best alignment of sequences
     my_best_align, my_best_score, my_best_match = find_best_align(s1, s2, l1, l2)
 
-    # Write result to an output file called 'Alignment_output.txt'
+    # Write result to an output file called 'Alignment_output.txt' and print to console
     output_file = open("../Results/Alignment_output.txt", "w+")
-    #output_file.write("%s\n%s\n%s\nBest score: %s\n" % (my_best_match, my_best_align, s1, my_best_score))
-    output_file.write("BEST SCORE:%s\n"
-                      "%s alignment(s) found with best score:\n"
-                      "%s\n%s\n%s\n") % (my_best_score, len(my_best_match))
+
+    output_file.write(f"BEST SCORE: {str(my_best_score)}\n{str(len(my_best_match))} alignment(s) found with best score:\n\n")
     print("Best score:", my_best_score)
     print(len(my_best_match), "alignment(s) found with best score:\n")
-    #print("\n")
+
     for i in range(len(my_best_match)):
+        output_file.write(f"------\nAlignment {str(i + 1)}\n------\n\n")
+
         print(my_best_match[i])
+        output_file.write(f"{my_best_match[i]}\n\n")
+
         print(my_best_align[i])
+        output_file.write(f"{my_best_align[i]}\n\n")
+
         print(s1,"\n")
+        output_file.write(f"{s1}\n\n")
+
 
     # Close the input and output files
     fastafile1.close()
