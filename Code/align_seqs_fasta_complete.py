@@ -1,36 +1,37 @@
 #!/usr/bin/env python3
 
 """Finds the best alignment of two DNA sequences (ie. the alignment with the most matched bases) from two inputted
-FASTA files. Writes the alignment and the number of matches to a file called Alignment_output.txt."""
+FASTA files. Writes the alignment and the number of matches to a file."""
 
-__appname__ = "Align_seqs.py"
-__author__ = "Elin Falla, ef16@ic.ac.uk"
-__version__ = "0.0.1"
+__appname__ = 'Align_seqs_fasta.py'
+__author__ = 'Ioan Evans (ie917@ic.ac.uk), Elin Falla (ef16@ic.ac.uk), Danica Duan (d.duan20@imperial.ac.uk), Eesha Rangani (eesha_rangani@yahoo.com)'
+__version__ = '0.0.1'
 
-# Imports #
+# Imports
+
+import os
 import sys
 
 
-# Functions #
-def fasta_to_string(fastafile):
-    """Converts a fasta file to a string (removes first line and new line characters)"""
+def to_string(fasta):
+    """Convert the sequence data in the fasta file to a string"""
 
-    # Read fasta file into a string
-    sequence = fastafile.read()
+    # remove header
+    fasta_nh = fasta.readlines()[1:]
 
-    # Remove first line
-    sequence = sequence.split("\n", 1)[1]  # split at \n, maxsplit = 1, then selects second element (ie. sequence)
+    # make into single string
+    fasta_str = ''.join(fasta_nh)
 
-    # Remove newline characters if present
-    if "\n" in sequence:
-        sequence = sequence.replace("\n", "")
+    # remove newline characters
+    seq = fasta_str.replace("\n", "")
 
-    return sequence
+    return seq
 
 
 def string_swap(seq1, seq2):
     """Assign the longer sequence to s1, and the shorter to s2.
-    Calculate l1 and l2: l1 is length of the longer sequence, l2 that of the shorter."""
+    Calculate l1 and l2: l1 is length of the longer sequence, l2 that of the shorter"""
+
     l1 = len(seq1)
     l2 = len(seq2)
     if l1 >= l2:  # If l1 is already longer than l2, no need to swap strings
@@ -39,13 +40,15 @@ def string_swap(seq1, seq2):
     else:  # If l2 is longer than l1, swap the strings and the lengths
         s1 = seq2
         s2 = seq1
-        l1, l2 = l2, l1 # swaps the two lengths
+        l1, l2 = l2, l1  # swaps the two lengths
+
     return s1, s2, l1, l2
 
 
 def calculate_score(s1, s2, l1, l2, startpoint):
     """Calculates a score by returning the number of matches starting
     from arbitrary start point in the sequence (chosen by user)"""
+
     matched = ""  # to hold string displaying alignments
     score = 0
     for i in range(l2):
@@ -56,14 +59,7 @@ def calculate_score(s1, s2, l1, l2, startpoint):
             else:
                 matched = matched + "-"  # - indicates no match
 
-    # Formatted output
-    # print("." * startpoint + matched)  # prints '." times whatever number startpoint is set to, then the matched string
-    # print("." * startpoint + s2)
-    # print(s1)
-    # print(score)
-    # print(" ")
-
-    return score, matched
+    return score
 
 
 def find_best_align(s1, s2, l1, l2):
@@ -71,26 +67,44 @@ def find_best_align(s1, s2, l1, l2):
 
     my_best_align = None
     my_best_score = -1
-    my_best_match = None
 
     for i in range(l1):  # Note that you just take the last alignment with the highest score
-        z, matched = calculate_score(s1, s2, l1, l2, i)
+        z = calculate_score(s1, s2, l1, l2, i)
         if z > my_best_score:
             my_best_align = "." * i + s2  # prints number of '.' to get to startpoint (which is i here)
             my_best_score = z
-            my_best_match = "." * i + matched
 
     # Formatted output
-    print(my_best_match)
     print(my_best_align)
     print(s1)
     print("Best score:", my_best_score)
 
-    return my_best_align, my_best_score, my_best_match
+    return my_best_align, my_best_score
+
+
+def output_file(a, b, my_best_align, my_best_score, s1):
+    """Finds basename of input files to create output file; writes best alignment to it"""
+
+    # Convert fastafiles to strings
+    a = str(a)
+    b = str(b)
+
+    # Get basenames of fasta filepaths
+    base_a = os.path.basename(a)
+    name_a = os.path.splitext(base_a)[0]
+    base_b = os.path.basename(b)
+    name_b = os.path.splitext(base_b)[0]
+
+    # Write alignment output to file (named using basenames)
+    g = open(f'../Results/fasta_{name_a}+{name_b}.txt', 'w')
+    g.write('My best alignment is: ' + '\n' + str(my_best_align) + '\n' + str(s1) + '\n')
+    g.write('My best score is ' + str(my_best_score) + '\n')
+
+    return
 
 
 def main(argv):
-    """Main entry point of the program: reads input file, calculates the best match, and writes it to output file."""
+    """Main entry point of the program: reads input files, calculates the best match, and writes it to output file"""
 
     # If two files not inputted on the command line
     if len(sys.argv) != 3:
@@ -98,7 +112,6 @@ def main(argv):
         if len(sys.argv) == 2:
             print("Not enough files. Please use 2 fasta files as arguments.")
             return 1
-            # TODO check for > to see if multiple sequences in one file. if so, split it??
 
         elif len(sys.argv) == 1:  # if no arguments given, use default files
             print("No files given. Using default fasta files...")
@@ -113,44 +126,24 @@ def main(argv):
         fastafile1 = open(sys.argv[1], "r")
         fastafile2 = open(sys.argv[2], "r")
 
-    seq1 = fasta_to_string(fastafile1)
-    seq2 = fasta_to_string(fastafile2)
-
-
-
-    # Open the csv file with the DNA sequences
-    # sequences = open("../Data/Sequences.csv", "r")
-
-    # Split the csv file by lines and assign the 2 sequences to variables
-    # seqs = sequences.read().splitlines()
-    # seq1 = seqs[0]
-    # seq2 = seqs[1]
+    # Prepare the fasta files
+    seq1 = to_string(fastafile1)
+    seq2 = to_string(fastafile2)
 
     # Run string_swap to find longer sequence
     s1, s2, l1, l2 = string_swap(seq1, seq2)
 
     # Run find_best_align to find best alignment of sequences
-    my_best_align, my_best_score, my_best_match = find_best_align(s1, s2, l1, l2)
+    my_best_align, my_best_score = find_best_align(s1, s2, l1, l2)
 
-    # Write result to an output file called 'Alignment_output.txt'
-    output_file = open("../Results/Alignment_output.txt", "w+")
-    output_file.write("%s\n%s\n%s\nBest score: %s\n" % (my_best_match, my_best_align, s1, my_best_score))
-
-    # Close the input and output files
-    fastafile1.close()
-    fastafile2.close()
-    output_file.close()
+    # Output file
+    output_file(fastafile1, fastafile2, my_best_align, my_best_score, s1)
 
     return 0
 
 
 if __name__ == "__main__":
-    """Makes sure the 'main' function is called from the command line."""
     status = main(sys.argv)
     sys.exit(status)
 
-# TODO FOR GROUP EXERCISE
-# function that turns fasta input into string
-# function that takes in two dna seqs and outputs (my_best_align, s1, my_best_score)
-# main that reads files and outputs resulting file
-# Have error message for if 0 or 1 files given, if 0 use default
+
