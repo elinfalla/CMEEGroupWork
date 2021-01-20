@@ -1,10 +1,10 @@
-Hello
+# CMEE - Group work
+## Group 2 - Aardvarks
 
-HI this is Danica!
+### Directory structure
 
-TIME TO BREAK IT ALL
+**Elin** = Elin's implementations of group work scripts
+**Ioan** = Ioan's implementations of group work scripts
+**Code** and **Data** = Danica's implementations of group work scripts
 
-Hi this is Danica again
-
-
-Hello team - Eesha
+**Submission** = Final versions of all group work scripts
