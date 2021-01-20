@@ -2,7 +2,7 @@
 
 #packages
 require(dplyr)
-require(readr)
+#require(readr)
 
 # read in dataset
 MyDF <- as.data.frame(read.csv("../Data/EcolArchives-E089-51-D1.csv"))
@@ -34,4 +34,4 @@ model_result <-
   group_modify(~ create_lm_model(.))
 
 #write model_result to csv
-write_csv(model_result, "../Results/PP_Regress_loc_Results.csv")
+write.csv(model_result, "../Results/PP_Regress_loc_Results.csv")
