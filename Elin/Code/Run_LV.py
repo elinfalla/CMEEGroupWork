@@ -1,6 +1,6 @@
 #!usr/bin/env python3
 
-"""Runs LV1.py and LV2.py and profiles them"""
+"""Imports LV1.py, LV2.py, LV3.py, LV4.py and LV5.py and profiles them"""
 
 __appname__ = "Run_LV.py"
 __author__ = 'Elin Falla (ef16@ic.ac.uk)'

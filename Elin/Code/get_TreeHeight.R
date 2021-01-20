@@ -34,7 +34,8 @@ TreeHeight <- function(degrees, distance) {
     return(height)
 }
 
-print(paste("The heigh of a tree with an angle of 37 degrees at distance 40m is", as.character(TreeHeight(37,40))))
+#change: added t to height - WHY IS THIS HERE?
+print(paste("The height of a tree with an angle of 37 degrees at distance 40m is", as.character(TreeHeight(37,40))))
 
 # Assigning the output of the function to a column
 
@@ -42,8 +43,8 @@ tree_data$Tree.Height.m <- TreeHeight(tree_data$Angle.degrees, tree_data$Distanc
 
 # Creating a csv output
 
-write.csv(tree_data, paste("../Results/", string, ".csv", sep = ""), row.names = FALSE)
+write.csv(tree_data, paste("../Results/", string, "_treeheights.csv", sep = ""), row.names = FALSE) # change: _treeheights
 
 # Message to state complete
 
-print("Done")
+print("get_Treeheight.R complete") # change

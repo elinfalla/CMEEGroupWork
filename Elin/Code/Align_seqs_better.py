@@ -4,7 +4,7 @@
 FASTA files. If multiple best matches, it outputs all of them. Writes the alignment(s) and the number of matches to a
 file called Alignment_output.txt."""
 
-__appname__ = "Align_seqs.py"
+__appname__ = "Align_seqs_better.py"
 __author__ = "Elin Falla, ef16@ic.ac.uk"
 __version__ = "0.0.1"
 
@@ -15,7 +15,7 @@ import sys
 
 # Functions #
 def fasta_to_string(fastafile):
-
+    """Converts fasta file to a string"""
     # Read fasta file into a string
     sequence = fastafile.read()
 
