@@ -9,7 +9,6 @@ __author__ = "Elin Falla (ef16@ic.ac.uk), Ioan Evans (ie917@ic.ac.uk), Danica Du
 __version__ = "0.0.1"
 
 # Imports #
-import pandas as pd
 import sys
 import os
 
@@ -131,16 +130,6 @@ def main(argv):
     seq1 = fasta_to_string(fastafile1)
     seq2 = fasta_to_string(fastafile2)
 
-
-
-    # Open the csv file with the DNA sequences
-    # sequences = open("../Data/Sequences.csv", "r")
-
-    # Split the csv file by lines and assign the 2 sequences to variables
-    # seqs = sequences.read().splitlines()
-    # seq1 = seqs[0]
-    # seq2 = seqs[1]
-
     # Run string_swap to find longer sequence
     s1, s2, l1, l2 = string_swap(seq1, seq2)
 
@@ -173,7 +162,6 @@ def main(argv):
 
         print(s1,"\n")
         output_file.write(f"{s1}\n\n")
-
 
     # Close the input and output files
     fastafile1.close()
